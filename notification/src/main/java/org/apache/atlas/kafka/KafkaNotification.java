@@ -42,6 +42,8 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.*;
 import java.util.concurrent.Future;
 
@@ -317,6 +319,10 @@ public class KafkaNotification extends AbstractNotification implements Service {
 
         consumerProperties.putAll(properties);
         consumerProperties.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
+
+        StringWriter sw = new StringWriter();
+        consumerProperties.list(new PrintWriter(sw));
+        LOG.info("kafka consumer properties: " + sw.getBuffer().toString());
 
         return consumerProperties;
     }
