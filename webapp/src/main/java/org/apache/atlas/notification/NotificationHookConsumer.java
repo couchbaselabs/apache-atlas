@@ -490,7 +490,7 @@ public class NotificationHookConsumer implements Service, ActiveStateChangeHandl
             this.resetInterval = maxDuration * 2;
         }
 
-        public void pause(Exception ex) {
+        public void pause(Throwable ex) {
             setWaitDurations();
 
             try {
@@ -551,19 +551,21 @@ public class NotificationHookConsumer implements Service, ActiveStateChangeHandl
                         List<AtlasKafkaMessage<HookNotification>> messages = consumer.receiveWithCheckedCommit(lastCommittedPartitionOffset);
 
                         for (AtlasKafkaMessage<HookNotification> msg : messages) {
+                            LOG.info("processing hook notification {}", msg.getMessage());
                             handleMessage(msg);
                         }
                     } catch (IllegalStateException ex) {
+                        LOG.warn("IllegalStateException in NotificationHookConsumer", ex);
                         adaptiveWaiter.pause(ex);
-                    } catch (Exception e) {
+                    } catch (Throwable e) {
+                        LOG.warn("Exception in NotificationHookConsumer", e);
                         if (shouldRun.get()) {
-                            LOG.warn("Exception in NotificationHookConsumer", e);
-
                             adaptiveWaiter.pause(e);
                         } else {
                             break;
                         }
                     }
+                    LOG.debug("Consumer shouldRun: {}", shouldRun.get());
                 }
             } finally {
                 if (consumer != null) {

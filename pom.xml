@@ -809,6 +809,7 @@
         <tinkerpop.version>3.5.5</tinkerpop.version>
         <woodstox-core.version>5.0.3</woodstox-core.version>
         <zookeeper.version>3.5.7</zookeeper.version>
+        <awssdk.version>1.12.477</awssdk.version>
     </properties>
 
     <modules>

@@ -320,10 +320,6 @@ public class KafkaNotification extends AbstractNotification implements Service {
         consumerProperties.putAll(properties);
         consumerProperties.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
 
-        StringWriter sw = new StringWriter();
-        consumerProperties.list(new PrintWriter(sw));
-        LOG.info("kafka consumer properties: " + sw.getBuffer().toString());
-
         return consumerProperties;
     }
 
